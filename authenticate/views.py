@@ -48,7 +48,7 @@ def signup(request):
         
         # Send welcome email
         subject = "Welcome to Blood Buddy"
-        message = f"Hello {myuser.first_name}!\n\n Please confirm your email address to activate your account.\n\nRegards,\nThe Blood Buddy Team"
+        message = f"Hello {myuser.first_name}!\n\n Please confirm your email address to activate your account.\n\nRegards,\nBlood Buddy Team"
         send_mail(subject, message, settings.EMAIL_HOST_USER, [myuser.email], fail_silently=True)
 
         # Send email confirmation link
