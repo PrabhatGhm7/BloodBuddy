@@ -11,20 +11,25 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.conf import settings
 from . tokens import generate_token
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-
+from .models import UserProfile
+import sqlite3
+import csv
 
 def home(request):
     return render(request, 'index.html')
 
 def signup(request):
-    #Signup form
+    # Signup form
     if request.method == "POST":
         fullname = request.POST.get("fullname")
         email = request.POST.get("email")
         username = request.POST.get("username")
         bloodgroup = request.POST.get("bloodgroup")
-        pass1 = request.POST.get("pass1")  
-        pass2 = request.POST.get("pass2")  
+        age = request.POST.get("age")
+        address = request.POST.get("address")
+        gender = request.POST.get("gender")
+        pass1 = request.POST.get("pass1")
+        pass2 = request.POST.get("pass2")
 
         # Validate username
         if User.objects.filter(username=username).exists():
@@ -36,19 +41,27 @@ def signup(request):
             messages.error(request, "Email already registered!")
             return redirect('home')
 
-        # Validate password 
+        # Validate password
         if pass1 != pass2:
             messages.error(request, "Passwords do not match!")
             return redirect('home')
 
+        reqage = int(age)
+        if reqage < 18:
+            messages.error(request, "You need to be at least 18 years old")
+            return redirect('home')
+
         # Create user object
         myuser = User.objects.create_user(username, email, pass1)
-        myuser.is_active = False  
+        myuser.is_active = False
         myuser.save()
+
+        # Create UserProfile associate with the User and them adding it to myuser
+        UserProfile.objects.create(user=myuser, fullname=fullname, age=age, gender=gender, bloodgroup=bloodgroup, address=address)
         
         # Send welcome email
         subject = "Welcome to Blood Buddy"
-        message = f"Hello {myuser.first_name}!\n\n Please confirm your email address to activate your account.\n\nRegards,\nThe Blood Buddy Team"
+        message = f"Hello {myuser.username}!\n\n Please confirm your email address to activate your account.\n\nRegards,\nThe Blood Buddy Team"
         send_mail(subject, message, settings.EMAIL_HOST_USER, [myuser.email], fail_silently=True)
 
         # Send email confirmation link
@@ -68,10 +81,11 @@ def signup(request):
             to=[myuser.email],
         )
         email.send()
+        
 
         messages.success(request, "Your account has been created successfully! Please check your email to activate your account.")
         return redirect('signin')
-
+    
     return render(request, "signup.html")
 
 
@@ -92,11 +106,13 @@ def activate(request,uidb64,token):
         return render(request,'activation_failed.html')
 
 
+
+
 def signin(request, signup=None):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
+        # Authentication successful
         if form.is_valid():
-            # Authentication successful
             user = form.get_user()
             login(request, user)
             messages.success(request, 'Successfully signed in!')
@@ -104,16 +120,62 @@ def signin(request, signup=None):
         else:
             messages.error(request, 'Invalid username or password')
             return redirect('home')
-
-    
+        
     return render(request, 'signin.html')
-#main profile page
 
+
+#main profile page
 def profile(request):
-    if not request.user.is_authenticated :
+    if not request.user.is_authenticated:
         messages.error(request, 'You must be logged in first')
         return redirect('home')
-    return render(request, 'profile.html')
+    print(request.session.items())
+    current_username = request.user.username
+    user_profile = UserProfile.objects.get(user=request.user)
+    return render(request, 'profile.html', {'user_profile': user_profile, 'current_username': current_username})
+
+    
+def database_push(request):
+    # Is user authenticated ?
+    if not request.user.is_authenticated:
+        pass
+
+    try:
+       # Retrieve the user profile
+        user_profile = UserProfile.objects.get(user=request.user)
+
+        # Connect to the SQLite database
+        conn = sqlite3.connect("db.sqlite3")  
+        curs = conn.cursor()
+
+        # Create the table if it doesn't exist
+        curs.execute("""
+            CREATE TABLE IF NOT EXISTS listings_pure_python (
+                id INTEGER PRIMARY KEY,
+                fullname TEXT,
+                age INTEGER,
+                address TEXT,
+                bloodgroup TEXT,
+                gender TEXT
+            )
+        """)
+
+        # Commit the changes
+        conn.commit()
+
+        # Insert data into the database
+        curs.execute("""
+            INSERT INTO details (fullname, age, address, bloodgroup, gender)
+            VALUES (?, ?, ?, ?, ?)
+        """, (user_profile.fullname, user_profile.age, user_profile.address, user_profile.bloodgroup, user_profile.gender))
+
+        # Commit the changes and close the connection
+        conn.commit()
+        conn.close()
+    
+    except UserProfile.DoesNotExist:
+        pass
+
 #logout page
 def signout(request):
     logout(request)

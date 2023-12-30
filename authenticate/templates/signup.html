@@ -12,7 +12,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
         }
         .container {
             background-color: #fff;
@@ -27,8 +26,8 @@
             text-align: left;
             margin: 10px 0;
         }
-        input {
-            width: 100%;
+        input, select {
+            width: calc(100% - 20px); /* Adjusted width */
             padding: 10px;
             margin: 8px 0;
             box-sizing: border-box;
@@ -79,8 +78,38 @@
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
 
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender" required>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+            
+            <label for="address">Address:</label>
+            <select id="address" name="address" required>
+                <option value="koshi">Koshi Province (कोशी प्रदेश)</option>
+                <option value="madhesh">Madhesh Province (मधेस प्रदेश)</option>
+                <option value="bagmati">Bagmati Province (बाग्मती प्रदेश)</option>
+                <option value="gandaki">Gandaki Province (गण्डकी प्रदेश)</option>
+                <option value="lumbini">Lumbini Province (लुम्बिनी प्रदेश)</option>
+                <option value="karnali">Karnali Province (कर्णाली प्रदेश)</option>
+                <option value="sudurpashchim">Sudurpashchim Province(सुदूरपश्चिम प्रदेश)</option>
+            </select>
+                        
+            <label for="age">Age:</label>
+                <input type="number" id="age" name="age" required min="0">
+
             <label for="bloodgroup">Blood Group:</label>
-            <input type="text" id="bloodgroup" name="bloodgroup" required>
+            <select id="bloodgroup" name="bloodgroup" required>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+            </select>
     
             <label for="password">Password:</label>
             <input type="password" id="password" name="pass1" required>
