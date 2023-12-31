@@ -1,0 +1,31 @@
+<!-- search.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+</head>
+<body>
+
+    <h1>Search Results</h1>
+
+    {% if person %}
+        <p>People Information:</p>
+        <ul>
+            {% for p in person %}
+                <li>
+                    <strong>Name:</strong> {{ p.fullname }}<br>
+                    <strong>Age:</strong> {{ p.bloodgroup }}<br>
+                    <strong>Address:</strong> {{ p.address }}<br>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No users found.</p>
+    {% endif %}
+
+    <a href="{% url 'profile' %}">Profile</a>
+
+</body>
+</html>

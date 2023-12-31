@@ -7,6 +7,9 @@ name = "pypi"
 django = "*"
 django-allauth = "*"
 six = "*"
+mysql = "*"
+mysqlclient = "*"
+mysql-connector-python = "*"
 
 [dev-packages]
 

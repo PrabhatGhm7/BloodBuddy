@@ -14,7 +14,7 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from .models import UserProfile
 import sqlite3
 import csv
-
+import mysql.connector
 def home(request):
     return render(request, 'index.html')
 
@@ -124,6 +124,8 @@ def signin(request, signup=None):
     return render(request, 'signin.html')
 
 
+
+
 #main profile page
 def profile(request):
     if not request.user.is_authenticated:
@@ -132,50 +134,16 @@ def profile(request):
     print(request.session.items())
     current_username = request.user.username
     user_profile = UserProfile.objects.get(user=request.user)
+    global srch_bloodgroup , srch_address
+    #for searching in search
+    if request.method == 'POST':
+        srch_bloodgroup = request.POST.get('bloodgroup')
+        srch_address = request.POST.get('address')
+        person = UserProfile.objects.filter(bloodgroup__icontains=srch_bloodgroup, address__icontains=srch_address)
+        return render(request,'search.html',{'person':person})
+
     return render(request, 'profile.html', {'user_profile': user_profile, 'current_username': current_username})
-
-    
-def database_push(request):
-    # Is user authenticated ?
-    if not request.user.is_authenticated:
-        pass
-
-    try:
-       # Retrieve the user profile
-        user_profile = UserProfile.objects.get(user=request.user)
-
-        # Connect to the SQLite database
-        conn = sqlite3.connect("db.sqlite3")  
-        curs = conn.cursor()
-
-        # Create the table if it doesn't exist
-        curs.execute("""
-            CREATE TABLE IF NOT EXISTS listings_pure_python (
-                id INTEGER PRIMARY KEY,
-                fullname TEXT,
-                age INTEGER,
-                address TEXT,
-                bloodgroup TEXT,
-                gender TEXT
-            )
-        """)
-
-        # Commit the changes
-        conn.commit()
-
-        # Insert data into the database
-        curs.execute("""
-            INSERT INTO details (fullname, age, address, bloodgroup, gender)
-            VALUES (?, ?, ?, ?, ?)
-        """, (user_profile.fullname, user_profile.age, user_profile.address, user_profile.bloodgroup, user_profile.gender))
-
-        # Commit the changes and close the connection
-        conn.commit()
-        conn.close()
-    
-    except UserProfile.DoesNotExist:
-        pass
-
+        
 #logout page
 def signout(request):
     logout(request)
