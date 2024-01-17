@@ -1,78 +1,160 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In</title>
+    <title>Sign In in BloodBuddy</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-            text-align: center;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 8px 0;
+        *{
             box-sizing: border-box;
+            align-content: stretch;
+
         }
-        button {
-            background-color: #4caf50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
+        html,body{
+            height: 100%;
         }
-        .messages {
-            list-style: none;
-            padding: 0;
-            margin: 10px 0;
-        }
-        .messages li {
-            margin: 5px 0;
+        body{
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            margin: 20px 435px;
+            font-size: 17px;
             padding: 10px;
-            border-radius: 3px;
+           /* overflow: hidden;   it makes the scroll bar disappear */
+           
         }
-        .messages.success li {
-            background-color: #dff0d8;
-            color: #4caf50;
+
+        
+        .background{
+            background-image: url("/static/bloodyhell.png");
+            height: 100%;
+            background-position: center;
+            background-color: #e0cfcf;
+            background-repeat: no-repeat;   /*as the background picture of ours doesnt really cover te whole background,,, repeating it in x-axis would make it look better*/
+            background-size: cover;
+            display: block;
+            text-align: center;   /*display and text-align helps you to bring the form below in centre*/
+            
+            
+            
         }
+        .whole{
+            padding: 10px;
+            border: 1px solid black;
+            border-radius: 5px;
+            box-shadow: 12px 12px 2px 1px rgba(37, 37, 38, 0.2);
+            text-shadow: 2px 2px 4px #3e403d;
+            background-color: rgba(255, 255, 255, 0.441);
+            background: rgba(255, 255, 255, 0.18);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+       
+        
+
+
+
+
+        input[type="text"],
+        input[type="password"]{
+            border: 1px solid black;
+            line-height: 1em;
+        }
+        input[type="text"],
+        label,
+        input[type="password"]{
+            width: 75%;
+            padding: 12px;
+            
+            border-radius: 4px;
+            border-color: rgb(12, 75, 130);
+            text-align: !important left ;
+        }
+       input[type="submit"]{
+        width: 25%;
+        background-color: red;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+       }
+       input[type="submit"]:hover{
+        background-color:rgba(255, 255, 255, 0.56);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10.2px);
+                -webkit-backdrop-filter: blur(10.2px);
+                border: 1px solid rgba(255, 255, 255, 1);
+                color: black;
+       }
+       input[type="submit"]:visited{
+        background-color: #1d10d6;
+       }
+       .img{
+        height: 100px;
+        width: 100px;
+        clip-path: circle(50% at 50% 50%);
+       }
+       a{
+        color: black;
+       }
+       img.bloodbuddy{
+       animation: bouncing 0.5s ease-out 1s infinite alternate both;
+       width: 80px;
+       position: absolute;
+       left: 0px;
+       bottom: 0px;
+       }
+       @keyframes bouncing {
+            0%{
+                bottom: 0;
+                
+            }
+            100%{
+                bottom: 50px;
+                
+            }
+            
+        }
+       
     </style>
 </head>
-<body>
-    <div class="container">
+<body class="background">
+    <div class="mole"></div>
+    <div class="whole">
         {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        <form action="/signin/" method="post">
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+        <form action="/signin/" method="post" class="form">
             {% csrf_token %}
-            <h2>Sign In</h2>
-
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-
-            <button type="submit">Sign In</button>
+            <img src="{% static 'blood buddy.png' %}" class="bloodbuddy" alt="">
+            <header>
+            <img class="img" src="/static/userimage.png" alt="this is user image">
+            <h1>Sign In</h1>
+            </header>
+            <p>Username</p><input type="text" name="username" id="username" required>
+            <p>Password</p><input type="password" name="password" id="password" required>
+            <br>
+            <label for="checkbox"><input id="checkbox"  type="checkbox" value="test" />Remember me</label>
+            <br>
+            <br>
+            <input type="submit"value="Sign In" style="font-size: 16px;">
+            <br>
+            <br>
+            <a href="{% url 'signup' %}">Don't have an account?</a>
+            <br>
+            <br>
         </form>
     </div>
+    
 </body>
 </html>
+
+
+
+

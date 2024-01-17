@@ -1,65 +1,271 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+    <title>Document</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+        *{
             margin: 0;
             padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            /* From https://css.glass */
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Add a border for separation */
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+    
+        .navbar a {
+            float: right; /* Align links to the right */
+            display: block;
+            color: black;
+            text-align: center;
+            padding: 20px 16px;
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+    
+        .navbar a:hover {
+            background-color: rgba(255, 255, 255, 0.7); /* Add transparency on hover */
+            color: black;
+        }
+
+        .bgimage {
+            background: url("{% static 'bg1.jpg' %}");
+            background-size: 100%;
+            width: 100%;
             height: 100vh;
+            position: relative;
         }
-        header {
-            background-color: #333;
-            color: white;
-            padding: 10px;
-            text-align: center;
+
+        .menu {
+            width: 100%;
+            height: 100px;
         }
-        .content {
-            padding: 20px;
-            text-align: center;
+
+        .leftmenu {
+            width: 25%;
+            line-height: 100px;
+            float: left;
         }
-        .button-container {
-            margin-top: 20px;
+
+        .leftmenu h4 {
+            padding-left: 20px;
+            font-weight: bold;
+            color: black;
+            font-size: 22px;
         }
-        button {
-            background-color: #4caf50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 3px;
+
+        .rightmenu {
+            width: 60%;
+            height: 100px;
+            float: right;
+        }
+
+        .rightmenu ul {
+            margin-left: 385px;
+        }
+
+        .rightmenu ul li {
+            display: inline-block;
+            list-style: none;
+            font-size: 15px;
+            color: black;
+            font-weight: bold;
+            line-height: 100px;
+            margin-left: 40px;
+            text-transform: uppercase;
             cursor: pointer;
-            margin: 0 10px;
         }
+
+        .rightmenu ul li:hover {
+            color: white;
+        }
+
+        .rightmenu ul li:visited {
+            color: black;
+        }
+
+        .text {
+            width: 100%;
+            margin-top: 185px;
+            text-transform: uppercase;
+            text-align: center;
+            color: black;
+        }
+
+        .text h1 {
+            font-size: 62px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-weight: 700;
+            margin: 14px 0;
+            text-shadow: 2px 2px 4px #3e403d;
+        }
+
+        .text h2 {
+            font-size: 20px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            text-shadow: 2px 2px 4px #393a39;
+        }
+
+        .btn {
+            background-color: rgba(255, 255, 255, 0.164);
+            color: black;
+            border: none;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+            line-height: 40px;
+            width: 150px;
+            margin-top: 25px;
+            border: 3px solid black;
+            cursor: pointer;
+        }
+
+        button a {
+            text-decoration: none;
+            color: black;
+        }
+
+        .btn:hover {
+            background-color: white;
+            color: black;
+            text-decoration: none;
+        }
+
+        img {
+            width: 250px;
+            position: absolute;
+            left: 10px;
+            bottom: 30px;
+        }
+
+        .message {
+            position: right;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(11px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 1001;
+        }
+
+        .modal h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+        p {
+            line-height: 1.5;
+        }
+
     </style>
 </head>
 <body>
-    {% if messages %}
-  <ul class="messages">
-    {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-  </ul>
-{% endif %}
-
-    <header>
-        <h1>Welcome to Our Website</h1>
-    </header>
-    <div class="content">
-        <h2>Home Page Content</h2>
-        <p>This is a simple home page. You can replace this content with your own.</p>
-        <div class="button-container">
-            <button type = 'submit'><a href="/signin">Sign In</a></button>
-            <button type ='submit'><a href="/signup">Sign Up</a></button>
-        </div>
-        
+    <div class="navbar">
+        <a href="#" onclick="showContactDialog()">Contact</a>
+        <a href="#" onclick="showAboutUsDialog()">About Us</a>
+        <a href="#">Home</a>
     </div>
+
+    <div id="aboutUsModal" class="modal">
+        <span class="close" onclick="closeModal('aboutUsModal')">&times;</span>
+        <h3>About Us</h3>
+        <p>Welcome to Bloodbuddy – Your Lifeline for Blood Connections!<br>
+            🩸 Swift Connections: Our advanced algorithms ensure rapid matching of donors with recipients. In moments of urgency, every second counts, and Bloodbuddy is committed to making swift connections to save lives.<br>
+            <br>
+            👥 Verified Profiles: Safety is paramount. We meticulously verify the profiles of both donors and recipients, creating a secure and trustworthy community dedicated to the noble cause of blood donation.<br>
+            <br>
+            🤝 Community Support: Beyond a platform, Bloodbuddy is a community of compassionate individuals united by the common goal of saving lives. Our support system goes beyond matches, fostering a sense of solidarity and shared responsibility.<br>
+            <br>
+            🔒 Privacy and Confidentiality: We understand the sensitivity of the information involved in blood donation. Rest assured, your privacy is our top priority. Bloodbuddy maintains strict confidentiality standards to protect your personal information.</p>
+            <br>
+    </div>
+
+    <!-- Modal for Contact Us -->
+    <div id="contactModal" class="modal">
+        <span class="close" onclick="closeModal('contactModal')">&times;</span>
+        <h3>Contact Us</h3>
+        <p>We value your feedback and inquiries. Reach out to us through the following channels:</p>
+        <ul>
+            <li><strong>Email:</strong> <a href="mailto:info@bloodbuddy.com">info@bloodbuddy.com</a></li>
+            <li><strong>Phone:</strong> +977 9845000000</li>
+            <li><strong>Address:</strong> Bloodbuddy Headquarters, Pokhara , Nepal</li>
+        </ul>
+        <br>
+        <p>We're here to assist you. Your suggestions are important to us as we strive to improve and make a positive impact on the community.</p>
+    </div>
+
+    <div class="bgimage">
+        <div class="menu">
+            <div class="leftmenu">
+                <h4><img src="{% static 'childbuddy.png' %}" alt=""> </h4>
+            </div>
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <div class="text">
+            <h2> WELCOME TO </h2>
+            <h1> BLOODBUDDY </h1>
+
+            <button class="btn"><a href="{% url 'signin' %}"> SIGN IN </a></button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="btn"><a href="{% url 'signup' %}"> SIGN UP </a></button>
+        </div>
+    </div>
+
+    <script>
+        function showAboutUsDialog() {
+            document.getElementById('aboutUsModal').style.display = 'block';
+        }
+
+        function showContactDialog() {
+            document.getElementById('contactModal').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+    </script>
 </body>
 </html>

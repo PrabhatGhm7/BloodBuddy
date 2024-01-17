@@ -1,124 +1,191 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-            text-align: center;
-        }
-        label {
-            display: block;
-            text-align: left;
-            margin: 10px 0;
-        }
-        input, select {
-            width: calc(100% - 20px); /* Adjusted width */
-            padding: 10px;
-            margin: 8px 0;
-            box-sizing: border-box;
-        }
-        button {
-            background-color: #4caf50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        .messages {
-            list-style: none;
-            padding: 0;
-            margin: 10px 0;
-        }
-        .messages li {
-            margin: 5px 0;
-            padding: 10px;
-            border-radius: 3px;
-        }
-        .messages.success li {
-            background-color: #dff0d8;
-            color: #4caf50;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        <form action="/signup/" method="post">
-            {% csrf_token %}
-            <h2>Sign Up</h2>
-    
-            <label for="fullname">Full Name:</label>
-            <input type="text" id="fullname" name="fullname" required>
-    
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-    
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
+{% load static %}
+<<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>sign up</title>
+        <style>
+            *{
+               box-sizing: border-box;
+               list-style: none;
+            }
+            header{
+                display: contents;
+                background-color: #dff0d8;  /*this f**king header tag is not working here*/
+            }
+            body{
+                font-family:Arial, Helvetica, sans-serif ;
+                background: url("{% static 'bg1.jpg' %}");
+                background-size: 120%;             /*tyo background phutto ko red part lai bottom part maa lyauna*/
+                background-color: #e1dada;
+                margin: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
 
-            <label for="gender">Gender:</label>
-            <select id="gender" name="gender" required>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-            </select>
+            }
             
-            <label for="address">Address:</label>
-            <select id="address" name="address" required>
-                <option value="koshi">Koshi Province (कोशी प्रदेश)</option>
-                <option value="madhesh">Madhesh Province (मधेस प्रदेश)</option>
-                <option value="bagmati">Bagmati Province (बाग्मती प्रदेश)</option>
-                <option value="gandaki">Gandaki Province (गण्डकी प्रदेश)</option>
-                <option value="lumbini">Lumbini Province (लुम्बिनी प्रदेश)</option>
-                <option value="karnali">Karnali Province (कर्णाली प्रदेश)</option>
-                <option value="sudurpashchim">Sudurpashchim Province(सुदूरपश्चिम प्रदेश)</option>
-            </select>
-                        
-            <label for="age">Age:</label>
-                <input type="number" id="age" name="age" required min="0">
+            .container {
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 16px;
+                box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+                backdrop-filter: blur(5px);
+                -webkit-backdrop-filter: blur(5px);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                padding: 17px;    /*thorai change haanethye*/
+                border-radius: 15px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                width: 500px;
+                text-align: center;
+                align-content: stretch;
+                text-shadow: 2px 2px 4px #3e403d;     /*for shadow of texts*/
+                box-shadow: 12px 12px 2px 1px rgba(37, 37, 38, 0.2);    /*for shadow of the whole box*/
+                
+            }
+            label {
+                display: block;
+                text-align: left;
+                margin: 10px 0;
+            }
+            input, select {
+                width: 75%;
+                width: calc(100% - 20px); /*Adjusted width */
+                padding: 10px;
+                margin: 8px 0;
+                box-sizing: border-box;
+            }
+            button {
+                background-color: #bd3838;
+                color: white;
+                padding: 15px 20px;
+                margin: 17px;
+                border: 1px solid rgba(255, 255, 255, 1);
+                box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+                border-radius: 5px;
+                cursor: pointer;
+            }
 
-            <label for="bloodgroup">Blood Group:</label>
-            <select id="bloodgroup" name="bloodgroup" required>
-                <option value="A+">A+</option>
-                <option value="A-">A-</option>
-                <option value="B+">B+</option>
-                <option value="B-">B-</option>
-                <option value="AB+">AB+</option>
-                <option value="AB-">AB-</option>
-                <option value="O+">O+</option>
-                <option value="O-">O-</option>
-            </select>
+            button:hover{
+                background: rgba(255, 255, 255, 0.56);
+                border-radius: 5px;
+                box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+                backdrop-filter: blur(10.2px);
+                -webkit-backdrop-filter: blur(10.2px);
+                border: 1px solid rgba(255, 255, 255, 1);
+                color: black;
+            }
     
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="pass1" required>
 
-            <label for="password2">Confirm Password:</label>
-            <input type="password" id="password2" name="pass2" required>
+            .messages {
+                list-style: none;
+                padding: 0;
+                margin: 10px 0;
+            }
+            .messages li {
+                margin: 5px 0;
+                padding: 10px;
+                border-radius: 3px;
+            }
+            .messages.success li {
+                background-color: #dff0d8;
+                color: #4caf50;
+            }
+             header{
+                padding: 50px;
+                text-align: center;
+                background-color: rgb(248, 239, 239);
+                font-family: Georgia, 'Times New Roman', Times, serif;
+            }
+            .bloodbuddy {
+                position: absolute;
+                width: 70px;
+                top: 0.5px;
+                right: 5px;
+                animation: bouncing 0.5s ease-out 1s infinite alternate both;
+            }
+            
+            @keyframes bouncing {
+                0% {
+                    top: 1=0.5px;
+                }
+                50% {
+                    top: 3px;
+                }
+                100% {
+                    top: 25px;
+                }
+            }
+            
+            
+        </style>
+    </head>
+    <body>
+
+        <div class="container">
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            
+                <form action="/signup/" method="post">
+                {% csrf_token %}
+                <header><h1>Sign up</h1> <img class="bloodbuddy" src="{% static 'rotated.png' %}" alt="signup Up"></header>
+        
+                <label for="fullname">Full Name:</label>
+                <input type="text" id="fullname" name="fullname" required>
+        
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+        
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
     
-            <button type="submit">Sign Up</button>
-        </form>
-    </div>
-</body>
-</html>
+                <label for="gender">Gender:</label>
+                <select id="gender" name="gender" required>
+                    <option value="">--Gender--</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+                
+                <label for="address">Address:</label>
+                <select id="address" name="address" required>
+                    <option value="">--Choose your Address--</option>
+                    <option value="koshi">Koshi Province (कोशी प्रदेश)</option>
+                    <option value="madhesh">Madhesh Province (मधेस प्रदेश)</option>
+                    <option value="bagmati">Bagmati Province (बाग्मती प्रदेश)</option>
+                    <option value="gandaki">Gandaki Province (गण्डकी प्रदेश)</option>
+                    <option value="lumbini">Lumbini Province (लुम्बिनी प्रदेश)</option>
+                    <option value="karnali">Karnali Province (कर्णाली प्रदेश)</option>
+                    <option value="sudurpashchim">Sudurpashchim Province(सुदूरपश्चिम प्रदेश)</option>
+                </select>
+                            
+                <label for="age">Age:</label>
+                    <input type="number" id="age" name="age" required min="0">
+    
+                <label for="bloodgroup" >Blood Group:</label>
+                <select id="bloodgroup" name="bloodgroup" placeholder="Choose your Blood Group" required>
+                    <option value="Choose your Blood Group">--Choose your Blood Group--</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                </select>
+        
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="pass1" required>
+    
+                <label for="password2">Confirm Password:</label>
+                <input type="password" id="password2" name="pass2" required>
+        
+                <button type="submit">Sign Up</button>
+            </form>
+    </body>
+    </html>

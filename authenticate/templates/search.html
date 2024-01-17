@@ -1,31 +1,192 @@
-<!-- search.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Results</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(11px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 1001;
+            padding: 10px;
+            color: white;
+            text-align: center;
+        }
+
+        form {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        label {
+            margin-right: 10px;
+        }
+
+        select, button {
+            padding: 8px;
+            margin: 5px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #fff;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        strong {
+            font-weight: bold;
+        }
+
+        #message-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            cursor: pointer;
+            font-size: 20px;
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #message-box {
+            display: none;
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            width: 300px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        #message-input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        #message-box button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #message-box button:hover {
+            background-color: #2980b9;
+        }
+    </style>
 </head>
 <body>
 
-    <h1>Search Results</h1>
+<header>
+    <!-- Your search form here -->
+    <form method="post" action="">
+        {% csrf_token %}
 
-    {% if person %}
-        <p>People Information:</p>
-        <ul>
-            {% for p in person %}
-                <li>
-                    <strong>Name:</strong> {{ p.fullname }}<br>
-                    <strong>Age:</strong> {{ p.bloodgroup }}<br>
-                    <strong>Address:</strong> {{ p.address }}<br>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No users found.</p>
-    {% endif %}
+        <label for="bloodgroup">Blood Group:</label>
+        <select id="bloodgroup" name="bloodgroup" required>
+            <option value="" disabled selected>Select Blood Group</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+        </select>
 
-    <a href="{% url 'profile' %}">Profile</a>
+        <label for="address">Address:</label>
+        <select id="address" name="address" required>
+            <option value="" disabled selected>Select Province</option>
+            <option value="koshi">Koshi Province (कोशी प्रदेश)</option>
+            <option value="madhesh">Madhesh Province (मधेस प्रदेश)</option>
+            <option value="bagmati">Bagmati Province (बाग्मती प्रदेश)</option>
+            <option value="gandaki">Gandaki Province (गण्डकी प्रदेश)</option>
+            <option value="lumbini">Lumbini Province (लुम्बिनी प्रदेश)</option>
+            <option value="karnali">Karnali Province (कर्णाली प्रदेश)</option>
+            <option value="sudurpashchim">Sudurpashchim Province(सुदूरपश्चिम प्रदेश)</option>
+        </select>
+        <button type="submit">Search</button>
+    </form>
+</header>
+
+<h1>Search Results</h1>
+
+{% if person %}
+    <ul>
+        {% for p in person %}
+            <li>
+                <strong>Name:</strong> {{ p.fullname }}<br>
+                <strong>Age:</strong> {{ p.bloodgroup }}<br>
+                <strong>Address:</strong> {{ p.address }}<br>
+                
+                <!-- Add message icon and box here -->
+                <div id="message-icon" onclick="toggleMessageBox('{{ p.fullname }}')">📬</div>
+                
+                <div id="message-box-{{ p.fullname }}">
+                    <!-- Your message box content here -->
+                    <p>Send a message to {{ p.fullname }}</p>
+                    <textarea id="message-input-{{ p.fullname }}" placeholder="Type your message"></textarea>
+                    <button onclick="sendMessage('{{ p.fullname }}')">Send</button>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No users found.</p>
+{% endif %}
+
+<a href="{% url 'profile' %}">Profile</a>
+
+<script>
+    function toggleMessageBox(username) {
+        var messageBox = document.getElementById("message-box-" + username);
+        messageBox.style.display = (messageBox.style.display === "block") ? "none" : "block";
+    }
+
+    function sendMessage(receiver) {
+        var messageInput = document.getElementById("message-input-" + receiver);
+        var message = messageInput.value;
+
+        // Send the message to the server using WebSocket
+        // You need to implement WebSocket functionality here
+        // For simplicity, alert is used here
+        alert("Sending message to " + receiver + ": " + message);
+    }
+</script>
 
 </body>
 </html>

@@ -1,0 +1,11 @@
+passwordkeys = str(['1','2','3','4','5','6','7','8','9','0','!','@','#','$','%','^','&' , '*','-','+','=','_','<','>','?',':',';','{',']','}','['])
+
+
+pass1 = 'password@12'
+for keys in passwordkeys:
+    if keys not in pass1:
+        print('not ')
+    else: 
+        print('yes')
+     
+            

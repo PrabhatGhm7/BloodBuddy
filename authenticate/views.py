@@ -4,16 +4,15 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.shortcuts import redirect, render
-from django.template.loader import render_to_string
+from django.template.loader import render_to_string 
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.forms import AuthenticationForm
+from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 from . tokens import generate_token
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from .models import UserProfile
-import sqlite3
-import csv
 import mysql.connector
 def home(request):
     return render(request, 'index.html')
@@ -30,6 +29,7 @@ def signup(request):
         gender = request.POST.get("gender")
         pass1 = request.POST.get("pass1")
         pass2 = request.POST.get("pass2")
+        
 
         # Validate username
         if User.objects.filter(username=username).exists():
@@ -55,6 +55,9 @@ def signup(request):
         myuser = User.objects.create_user(username, email, pass1)
         myuser.is_active = False
         myuser.save()
+        
+                         
+                    
 
         # Create UserProfile associate with the User and them adding it to myuser
         UserProfile.objects.create(user=myuser, fullname=fullname, age=age, gender=gender, bloodgroup=bloodgroup, address=address)
@@ -124,8 +127,6 @@ def signin(request, signup=None):
     return render(request, 'signin.html')
 
 
-
-
 #main profile page
 def profile(request):
     if not request.user.is_authenticated:
@@ -134,7 +135,11 @@ def profile(request):
     print(request.session.items())
     current_username = request.user.username
     user_profile = UserProfile.objects.get(user=request.user)
-    global srch_bloodgroup , srch_address
+    
+    return render(request, 'profile.html', {'user_profile': user_profile, 'current_username': current_username})
+        
+def search(request):
+    
     #for searching in search
     if request.method == 'POST':
         srch_bloodgroup = request.POST.get('bloodgroup')
@@ -142,8 +147,9 @@ def profile(request):
         person = UserProfile.objects.filter(bloodgroup__icontains=srch_bloodgroup, address__icontains=srch_address)
         return render(request,'search.html',{'person':person})
 
-    return render(request, 'profile.html', {'user_profile': user_profile, 'current_username': current_username})
-        
+    return render(request, 'search.html')
+    
+
 #logout page
 def signout(request):
     logout(request)
