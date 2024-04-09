@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from . import views
+from django.urls import reverse
 
 urlpatterns = [
     path('home/', views.home,name='home'),
@@ -11,4 +12,6 @@ urlpatterns = [
     path('search/', views.search,name='search'),
     path('activate/<uidb64>/<token>', views.activate, name='activate'),
     
+    
 ]
+    

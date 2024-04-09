@@ -1,40 +1,89 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
         body {
             margin: 0;
             font-family: 'Arial', sans-serif;
-            background-color: #f0f2f5;
+            background: linear-gradient(to right, #FF6B6B, #FF8E53);
+            color: white;
+            overflow-x: hidden;
         }
 
         header {
-            background: red;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            z-index: 1001;
-            padding: 1em;
-            text-align: right;
+            background: transparent;
+            box-shadow: none;
             position: relative;
+        }
+
+        .navbar {
+            overflow: hidden;
+            /* From https://css.glass */
+            background: rgba(255, 255, 255, 0.24);
+            border-radius: 7px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(7px);
+            -webkit-backdrop-filter: blur(7px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .navbar a {
+            font-size: 16px;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            padding: 10px;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .navbar a:hover {
+            color: #ddd;
+        }
+
+        .logout-btn {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: #c9302c;
         }
 
         .container {
             margin: 20px auto;
             max-width: 600px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);           
+             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
+            transition: box-shadow 0.3s, background-color 0.3s;
+        }
+
+        .container:hover {
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
         h2 {
@@ -53,15 +102,9 @@
             color: #333;
         }
 
-        .dropdown {
-            display: inline-block;
-            margin-top: 20px;
-            position: relative;
-        }
-
         .arrow-btn {
             background-color: transparent;
-            color: #fff;
+            color: white;
             border: none;
             cursor: pointer;
             font-size: 16px;
@@ -72,52 +115,29 @@
             color: #ccc;
         }
 
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-            z-index: 1;
-            right: 0;
-        }
-
-        .dropdown-content a {
-            color: #333;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-
-        .dropdown-content a:hover {
-            background-color: #f1f1f1;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-        
-        
         .material-symbols-outlined {
-        color: white;
-       
-        font-variation-settings:
-        'FILL' 0,
-        'wght' 500,
-        'GRAD' 0,
-        'opsz' 29
+            color: white;
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 500,
+                'GRAD' 0,
+                'opsz' 29;
         }
-
 
     </style>
 </head>
+
 <body>
     <header>
-        <div class="dropdown">
-            <button class="arrow-btn"><a href="{% url 'search' %}">  <span class="material-symbols-outlined">search</span> </a></button>
+        <div class="navbar">
+            <a href="{% url 'search' %}" onclick="scrollToSection('search-section')">
+                <span class="material-symbols-outlined">search</span>
+            </a>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
     </header>
 
-    <div class="container">
+    <div class="container" id="search-section">
         <h2>Welcome, {{ current_username }}!</h2>
 
         <!-- Display user details -->
@@ -131,10 +151,16 @@
     </div>
 
     <script>
-        function toggleDropdown() {
-            var dropdownContent = document.querySelector('.dropdown-content');
-            dropdownContent.style.display = (dropdownContent.style.display === 'block') ? 'none' : 'block';
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function logout() {
+            // Redirect to logout URL
+            window.location.href = "{% url 'logout' %}";
         }
     </script>
 </body>
+
 </html>
