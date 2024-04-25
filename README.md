@@ -1,7 +1,8 @@
 BLOODBUDDY
+
 Blood Buddy is an innovative web-based platform designed to transform the blood donation ecosystem.
 The primary goal of this project is to establish secure, efficient, and user-friendly interface connecting blood donors with individuals in need. 
-We aim to facilitate connections among sincere individuals who genuinely wish to donate blood and assist others. 
+
 
 Streamlined Blood Donation Process:
  	Create a user-friendly platform that simplifies the blood donation process.
