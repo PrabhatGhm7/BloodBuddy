@@ -1,4 +1,4 @@
-#BLOODBUDDY
+BLOODBUDDY: Based on Django
 
 Blood Buddy is an innovative web-based platform designed to transform the blood donation ecosystem.
 
