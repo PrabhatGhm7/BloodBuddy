@@ -27,7 +27,7 @@ EMAIL_PORT = EMAIL_PORT
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure--0(bgek02w4(#!tkua4(u4dri#8)ul@#4(1lw!j!p4)-2jtu@m'
+SECRET_KEY = 'django-insecure--0(bgek02w4(#!tkua4(u4dri#8)ul@#4(1lw!j!p4)-2jtu'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -93,7 +93,7 @@ DATABASES = {
         'NAME': 'blood_buddy',
         'HOST': 'localhost',
         'USER': 'root',
-        'PASSWORD': 'Ronaldo@cr7',
+        'PASSWORD': '',
         'PORT': '3306',
         
     }
